@@ -1,0 +1,19 @@
+name: test
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Compile
+      run: gfortran hello.f90 -o hello.exe
+    - name: Run test
+      run: ./hello.exe
+    
