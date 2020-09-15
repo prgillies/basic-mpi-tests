@@ -17,7 +17,7 @@ jobs:
       run: gfortran hello.f90 -o hello.exe
     - name: Run test
       run: ./hello.exe
-  test_parallel_hello
+  test_parallel_hello:
     runs-on: ubuntu-latest
     steps:
     - name: Get OpenMPI
