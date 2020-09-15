@@ -9,7 +9,7 @@ on:
       - master
 
 jobs:
-  test:
+  test_serial_hello:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
@@ -17,4 +17,26 @@ jobs:
       run: gfortran hello.f90 -o hello.exe
     - name: Run test
       run: ./hello.exe
-    
+  test_parallel_hello
+    runs-on: ubuntu-latest
+    steps:
+    - name: Get OpenMPI
+      run: |
+        wget https://download.open-mpi.org/release/open-mpi/v4.0/openmpi-4.0.2.tar.gz
+        tar -xvf ./openmpi-4.0.2.tar.gz
+        ./openmpi-4.0.2/configure CC=gcc CXX=g++ FC=gfortran --prefix="/home/${USER}/.openmpi"
+    - name: Install OpenMPI
+      run: |
+        make -j
+        sudo make install
+    - name: Setup OpenMPI
+      run: |
+        export PATH=${PATH}:/home/${USER}/.openmpi/bin/
+        export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/home/${USER}/.openmpi/lib/
+        echo ${PATH}
+        echo ${LD_LIBRARY_PATH}
+    - uses: actions/checkout@v1
+    - name: Compile
+      run: mpif90 mpihello.f90 -o mpihello.exe
+    - name: Run MPI test
+      run: mpirun -np 2 ./mpihello.exe
